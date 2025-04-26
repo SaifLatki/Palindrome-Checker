@@ -1,7 +1,19 @@
 import React from 'react';
 import { Play, RotateCcw, FastForward, ChevronDown } from 'lucide-react';
+import { SimulationStatus } from '../types/pda';
 
-const InputSection = ({
+interface InputSectionProps {
+  input: string;
+  setInput: (input: string) => void;
+  processingIndex: number;
+  startSimulation: () => void;
+  resetSimulation: () => void;
+  simulationStatus: SimulationStatus;
+  speed: number;
+  setSpeed: (speed: number) => void;
+}
+
+const InputSection: React.FC<InputSectionProps> = ({
   input,
   setInput,
   processingIndex,
@@ -11,11 +23,11 @@ const InputSection = ({
   speed,
   setSpeed
 }) => {
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     startSimulation();
   };

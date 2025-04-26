@@ -5,21 +5,23 @@ import StateDisplay from './StateDisplay';
 import ResultDisplay from './ResultDisplay';
 import TitleSection from './TitleSection';
 import { simulatePDAStep, isPalindrome } from '../utils/pdaLogic';
+import { PDAState, SimulationStatus } from '../types/pda';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import BackgroundEffect from './BackgroundEffect';
 
-const PDASimulator = () => {
-  const [input, setInput] = useState('');
-  const [stack, setStack] = useState([]);
-  const [currentState, setCurrentState] = useState('q0');
-  const [processingIndex, setProcessingIndex] = useState(-1);
-  const [simulationStatus, setSimulationStatus] = useState('idle');
-  const [result, setResult] = useState(null);
-  const [inPushPhase, setInPushPhase] = useState(true);
-  const [speed, setSpeed] = useState(500);
+const PDASimulator: React.FC = () => {
+  const [input, setInput] = useState<string>('');
+  const [stack, setStack] = useState<string[]>([]);
+  const [currentState, setCurrentState] = useState<string>('q0');
+  const [processingIndex, setProcessingIndex] = useState<number>(-1);
+  const [simulationStatus, setSimulationStatus] = useState<SimulationStatus>('idle');
+  const [result, setResult] = useState<boolean | null>(null);
+  const [inPushPhase, setInPushPhase] = useState<boolean>(true);
+  const [speed, setSpeed] = useState<number>(500); // milliseconds per step
   const { theme, toggleTheme } = useTheme();
 
+  // Reset the simulation
   const resetSimulation = () => {
     setStack([]);
     setCurrentState('q0');
@@ -27,8 +29,10 @@ const PDASimulator = () => {
     setSimulationStatus('idle');
     setResult(null);
     setInPushPhase(true);
+    setInput('');
   };
 
+  // Start the simulation
   const startSimulation = () => {
     if (!input.trim()) return;
     
@@ -37,11 +41,13 @@ const PDASimulator = () => {
     setProcessingIndex(0);
   };
 
+  // Run the simulation step by step
   useEffect(() => {
     if (simulationStatus !== 'running' || processingIndex === -1) return;
 
     const timer = setTimeout(() => {
       if (processingIndex >= input.length) {
+        // Simulation complete
         const isPal = isPalindrome(input);
         setResult(isPal);
         setSimulationStatus('complete');
@@ -49,13 +55,16 @@ const PDASimulator = () => {
         return;
       }
 
+      // Calculate midpoint to switch from push to pop phase
       const midpoint = Math.floor(input.length / 2);
       const isAtMidpoint = processingIndex === midpoint;
       
       if (isAtMidpoint && input.length % 2 === 1) {
+        // Skip the middle character for odd-length strings
         setProcessingIndex(processingIndex + 1);
         setInPushPhase(false);
       } else {
+        // Perform a PDA step
         const { newStack, newState, newPhase } = simulatePDAStep({
           input,
           stack,

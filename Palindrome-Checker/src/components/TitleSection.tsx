@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cpu } from 'lucide-react';
 
-const TitleSection = () => {
+const TitleSection: React.FC = () => {
   return (
     <div className="text-center mb-8">
       <div className="flex justify-center mb-3">
