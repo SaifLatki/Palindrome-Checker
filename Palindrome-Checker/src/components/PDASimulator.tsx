@@ -5,7 +5,7 @@ import StateDisplay from './StateDisplay';
 import ResultDisplay from './ResultDisplay';
 import TitleSection from './TitleSection';
 import { simulatePDAStep, isPalindrome } from '../utils/pdaLogic';
-import { PDAState, SimulationStatus } from '../types/pda';
+import {  SimulationStatus } from '../types/pda';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import BackgroundEffect from './BackgroundEffect';
